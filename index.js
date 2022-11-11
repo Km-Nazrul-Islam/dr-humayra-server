@@ -16,11 +16,19 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run(){
     try {
         const servicesCollection = client.db('doctorMahbuba').collection('services');
-        const serioulCollection = client.db('doctorMahbuba').collection('seriouls');
+        const reviewCollection = client.db('doctorMahbuba').collection('reviews');
 
         app.get('/services', async(req, res) => {
             const query = {}
             const cursor = servicesCollection.find(query);
+            const services = await cursor.toArray();
+            res.send(services)
+        });
+
+        app.get('/reviewsByEmail', async (req, res) => {
+            const email = req.query.email;
+            const query = {email:email}
+            const cursor = reviewCollection.find(query);
             const services = await cursor.toArray();
             res.send(services)
         });
@@ -41,8 +49,8 @@ async function run(){
 
         //seriouls API
         app.post('/seriouls', async (req, res) => {
-            const serioul = req.body;
-            const result = await serioulCollection.insertOne(serioul);
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review);
             res.send(result);
         })
     }
