@@ -29,9 +29,16 @@ async function run(){
             const email = req.query.email;
             const query = {email:email}
             const cursor = reviewCollection.find(query);
-            const services = await cursor.toArray();
-            res.send(services)
+            const review = await cursor.toArray();
+            res.send(review)
         });
+
+        app.get('/reviews', async (req, res) => {
+            const query = {};
+            const cursor = reviewCollection.find(query);
+            const review = await cursor.toArray();
+            res.send(review);
+        })
 
         app.get('/limitServices', async (req, res) => {
             const query = {}
@@ -48,9 +55,17 @@ async function run(){
         });
 
         //seriouls API
-        app.post('/seriouls', async (req, res) => {
+        app.post('/reviews', async (req, res) => {
             const review = req.body;
             const result = await reviewCollection.insertOne(review);
+            console.log(result)
+            res.send(result);
+        })
+
+        app.post('/addService', async (req, res)=> {
+            const addService = req.body;
+            const result = await servicesCollection.insertOne(addService);
+            console.log(result)
             res.send(result);
         })
     }
