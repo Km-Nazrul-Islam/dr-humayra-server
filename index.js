@@ -33,8 +33,9 @@ async function run(){
             res.send(review)
         });
 
-        app.get('/reviews', async (req, res) => {
-            const query = {};
+        app.get('/reviewsById', async (req, res) => {
+            const id = req.query.id;
+            const query = {service_id:id};
             const cursor = reviewCollection.find(query);
             const review = await cursor.toArray();
             res.send(review);
@@ -58,14 +59,12 @@ async function run(){
         app.post('/reviews', async (req, res) => {
             const review = req.body;
             const result = await reviewCollection.insertOne(review);
-            console.log(result)
             res.send(result);
         })
 
         app.post('/addService', async (req, res)=> {
             const addService = req.body;
             const result = await servicesCollection.insertOne(addService);
-            console.log(result)
             res.send(result);
         })
     }
